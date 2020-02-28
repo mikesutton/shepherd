@@ -11,6 +11,7 @@ update_services() {
   local supports_registry_auth=$3
   local detach_option=""
   local registry_auth=""
+  local post_update_url=""
   local name
 
   [ $supports_detach_option = true ] && detach_option="--detach=false"
@@ -30,6 +31,9 @@ update_services() {
         echo "No updates to service $name!"
       else
         echo "Service $name was updated!"
+        if ["$post_update_url" != "" ]; then
+          wget $post_update_url\?service=$name
+        fi  
       fi
     fi
   done
