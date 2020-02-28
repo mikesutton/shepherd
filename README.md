@@ -3,7 +3,7 @@
 [![Build Status](https://ci.strahlungsfrei.de/api/badges/djmaze/shepherd/status.svg)](https://ci.strahlungsfrei.de/djmaze/shepherd)
 [![Docker Stars](https://img.shields.io/docker/stars/mazzolino/shepherd.svg)](https://hub.docker.com/r/mazzolino/shepherd/) [![Docker Pulls](https://img.shields.io/docker/pulls/mazzolino/shepherd.svg)](https://hub.docker.com/r/mazzolino/shepherd/)
 
-A Docker swarm service for automatically updating your services whenever their base image is refreshed.
+This fork builds on the brilliant original by added a wget at the end of the script when a service is updated. This wget is customisable and is intended to call a webhook of your choosing (I am using one from Zapier Webhooks) and enable the event to be published wherever you like - for example on a channel on Slack or Rocket.Chat.
 
 ## Usage
 
@@ -36,11 +36,14 @@ Alternatively you can specify a filter for the services you want updated using t
 
 You can enable private registry authentication by setting the `WITH_REGISTRY_AUTH` variable.
 
+You can receive a post-update event by providing a `POST_UPDATE_URL`.
+
 Example:
 
     docker service create --name shepherd \
                         --constraint "node.role==manager" \
                         --env SLEEP_TIME="5m" \
+                        --end POST_UPDATE_URL=""\
                         --env BLACKLIST_SERVICES="shepherd my-other-service" \
                         --env WITH_REGISTRY_AUTH="true" \
                         --env FILTER_SERVICES="label=com.mydomain.autodeploy"
